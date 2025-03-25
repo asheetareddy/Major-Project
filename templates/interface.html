@@ -1,0 +1,160 @@
+<html>
+  <head>
+    <title>MorphoDetecto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      img {
+        max-width: 900px;
+        max-height: 900px;
+        width: 100%;
+        height: auto;
+      }
+      #element {
+        color: rgb(140, 104, 174);
+      }
+      /* Modal/Popup styles */
+      #aboutModal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+      }
+      .modal-content {
+        background-color: white;
+        padding: 20px;
+        max-width: 600px;
+        margin: 0 auto;
+        border-radius: 10px;
+        text-align: center;
+      }
+      .close {
+        color: #aaa;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        position: absolute;
+        top: 10px;
+        right: 20px;
+      }
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body class="bg-white text-gray-800">
+    <header class="flex items-center justify-between p-4 border-b border-gray-200">
+      <div class="flex items-center space-x-2">
+        <!-- Update the logo src path to use Flask's static URL -->
+        <img alt="MorphoDetecto logo" class="w-8 h-8" height="90" src="static/logomorph.jpg">
+        <span class="text-xl font-bold">
+          MorphoDetecto
+        </span>
+        <button class="ml-2 px-3 py-1 text-sm text-blue-600 bg-purple-100 rounded">
+          Detect Your image
+        </button>
+      </div>
+      <nav class="flex items-center space-x-4">
+        <!--
+        <a class="text-gray-600 hover:text-gray-800 flex items-center" href="#">
+          <i class="fas fa-home mr-1"></i>
+          Home
+        </a>
+        -->
+        <!-- Change this link to go to index.html -->
+        <a class="text-gray-600 hover:text-gray-800" onclick="window.location.href='/index'">
+          Detect
+        </a>
+        <a id="aboutBtn" class="text-gray-600 hover:text-gray-800" href="javascript:void(0);">
+          About
+        </a>
+      </nav>
+    </header>
+
+    <main class="flex flex-col items-center justify-center py-16">
+      <div class="flex items-center justify-between w-full max-w-6xl px-4">
+        <div class="text-left max-w-lg">
+          <h1 class="text-4xl font-bold mb-4">
+            <span id="element"></span>
+          </h1>
+          <p class="text-lg text-gray-600 mb-6">
+            Get started to check if your photo is morphed and secure your images!
+          </p>
+          <!-- Update this button to link to index.html -->
+          <button class="px-6 py-3 text-white bg-purple-600 rounded" type="button" onclick="window.location.href='/index'">
+            Get started
+          </button>
+        </div>
+        <div class="ml-8">
+          <!-- Update the image src path to use Flask's static URL -->
+          <img alt="Illustration of morphing" class="w-full" style="max-width: 900px; max-height: 800px;" src="static/Cybersecurity Awareness.jpeg">
+        </div>
+      </div>
+    </main>
+
+    <footer class="py-8 text-center text-gray-600">
+      <br><br><br><br><br>
+      Rely on our system to accurately detect image morphing and make informed decisions with ease.
+    </footer>
+
+    <!-- Modal -->
+    <div id="aboutModal" class="flex">
+      <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <h2 class="text-2xl font-bold mb-4">About MorphDetecto</h2>
+        <p>
+          Welcome to MorphDetecto, a web application to detect if your uploaded Image is Morphed or Original. If the image is morphed, the percentage of morphing will be shown. If not, the image is safe to use. We hope you now have a clear understanding of what MorphDetecto is about.
+        </p>
+        <p>
+          Thank you!
+        </p>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/typed.js@2.0.16/dist/typed.umd.js"></script>
+    <script>
+      var typed = new Typed('#element', {
+        strings: ['Want to check if an image has been altered?', 'Quickly discover if your photo is morphed.', 'Verify image authenticity with our morph detection'],
+        typeSpeed: 50,
+      });
+
+      // Get the modal
+      var modal = document.getElementById("aboutModal");
+
+      // Get the button that opens the modal
+      var btn = document.getElementById("aboutBtn");
+
+      // Get the <span> element that closes the modal
+      var closeSpan = document.getElementById("closeModal");
+
+      // When the user clicks on the button, open the modal
+      btn.onclick = function() {
+        modal.style.display = "flex";
+      }
+
+      // When the user clicks on <span> (x), close the modal
+      closeSpan.onclick = function() {
+        modal.style.display = "none";
+      }
+
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      }
+    </script>
+  </body>
+</html>

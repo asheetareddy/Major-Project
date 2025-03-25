@@ -1,0 +1,192 @@
+<!-- <html>
+<head>
+    <title>MorphoDetecto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <style>
+        body {
+            background-color: #800080; /* Purple color */
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-800">
+    <header class="flex items-center justify-between p-4 border-b border-gray-200">
+        <div class="flex items-center">
+            <img alt="MorphoDetecto logo" class="w-8 h-8" height="90" src="static/logomorph.jpg">
+            <h1 class="text-2xl font-bold">MorphoDetecto</h1>
+        </div>
+        <nav>
+            <a class="text-gray-600 hover:text-gray-800" onclick="window.location.href='/'">
+                <i class="fas fa-home"></i> Home
+            </a>
+        </nav>
+    </header>
+    <main class="flex flex-col items-center justify-center h-screen">
+        <div class="text-center mb-8 bg-gray-100 p-8 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold">Upload Image for Detection</h2>
+            <p class="text-gray-600">Upload an image to check if it's morphed or not.</p>
+            <div class="flex items-center space-x-4 mt-4">
+                <input class="border border-gray-300 p-2" id="fileInput" type="file" />
+                <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="checkImage()">Check Image</button>
+            </div>
+            <div id="result" class="mt-4 text-gray-800 font-semibold"></div>
+        </div>
+    </main>
+    <footer class="text-center p-4">
+        <p class="text-gray-600">Rely on our system to accurately detect image morphing and make informed decisions with ease.</p>
+    </footer>
+    <script>
+        async function checkImage() {
+            const fileInput = document.getElementById("fileInput");
+            const resultDiv = document.getElementById("result");
+
+            // Check if a file is selected
+            if (!fileInput.files.length) {
+                resultDiv.textContent = "Please select an image to upload.";
+                resultDiv.style.color = "red";
+                return;
+            }
+
+            // Prepare the file for upload
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            try {
+                // Send the file to the backend
+                const response = await fetch("/upload", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                // Parse the response
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Display the results
+                    resultDiv.style.color = "green";
+                    resultDiv.innerHTML = `
+                        Result: <strong>${data.result}</strong><br>
+                        Original Percentage: ${data.original_percentage}%<br>
+                        Morphed Percentage: ${data.morphed_percentage}%
+                    `;
+                } else {
+                    // Display the error
+                    resultDiv.style.color = "red";
+                    resultDiv.textContent = `Error: ${data.error}`;
+                }
+            } catch (error) {
+                // Handle any other errors
+                resultDiv.style.color = "red";
+                resultDiv.textContent = `An error occurred: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MorphoDetecto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <style>
+        body {
+            background-color: #800080; /* Purple color */
+        }
+        #imagePreview {
+            display: none;
+            margin-top: 20px;
+            width: 300px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-800">
+    <header class="flex items-center justify-between p-4 border-b border-gray-200">
+        <div class="flex items-center">
+            <img alt="MorphoDetecto logo" class="w-8 h-8" height="90" src="static/logomorph.jpg">
+            <h1 class="text-2xl font-bold">MorphoDetecto</h1>
+        </div>
+        <nav>
+            <a class="text-gray-600 hover:text-gray-800" onclick="window.location.href='/'">
+                <i class="fas fa-home"></i> Home
+            </a>
+        </nav>
+    </header>
+    <main class="flex flex-col items-center justify-center h-screen">
+        <div class="text-center mb-8 bg-gray-100 p-8 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold">Upload Image for Detection</h2>
+            <p class="text-gray-600">Upload an image to check if it's morphed or not.</p>
+            <div class="flex flex-col items-center space-y-4 mt-4">
+                <input class="border border-gray-300 p-2" id="fileInput" type="file" accept="image/*" onchange="previewImage(event)" />
+                <img id="imagePreview" alt="Uploaded Image Preview">
+                <button class="px-6 py-3 text-white bg-purple-600 rounded" onclick="checkImage()">Check Image</button>
+                <div id="result" class="mt-4 text-gray-800 font-semibold"></div>
+                <button id="generateReport" class="bg-green-500 text-white px-4 py-2 rounded hidden" onclick="generateReport()">Generate Report</button>
+            </div>
+        </div>
+    </main>
+    <footer class="text-center p-4">
+        <p class="text-gray-600">Rely on our system to accurately detect image morphing and make informed decisions with ease.</p>
+    </footer>
+
+    <script>
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function(){
+                var output = document.getElementById('imagePreview');
+                output.src = reader.result;
+                output.style.display = "block"; // Show image
+            };
+            reader.readAsDataURL(event.target.files[0]); // Convert to base64 URL
+        }
+
+        async function checkImage() {
+            const fileInput = document.getElementById("fileInput");
+            const resultDiv = document.getElementById("result");
+            const generateReportBtn = document.getElementById("generateReport");
+
+            if (!fileInput.files.length) {
+                resultDiv.textContent = "Please select an image to upload.";
+                resultDiv.style.color = "red";
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            try {
+                const response = await fetch("/upload", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultDiv.style.color = "green";
+                    resultDiv.innerHTML = `
+                        Result: <strong>${data.result}</strong><br>
+                        Original Percentage: ${data.original_percentage}%<br>
+                        Morphed Percentage: ${data.morphed_percentage}%
+                    `;
+                    generateReportBtn.classList.remove("hidden");
+                } else {
+                    resultDiv.style.color = "red";
+                    resultDiv.textContent = `Error: ${data.error}`;
+                }
+            } catch (error) {
+                resultDiv.style.color = "red";
+                resultDiv.textContent = `An error occurred: ${error.message}`;
+            }
+        }
+
+        function generateReport() {
+            window.location.href = "/report";
+        }
+    </script>
+</body>
+</html>
+
